@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BULL BANK - Solana Token Distribution</title>
+  <link rel="icon" type="image/png" href="/public/favicon.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #0a0a0a;
+      --surface: #121212;
+      --border: #1a1a1a;
+      --gold: #d4af37;
+      --gold-light: #e8d4a2;
+      --text: #e0e0e0;
+      --text-muted: #888;
+      --success: #66bb6a;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .ticker {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+      align-items: center;
+    }
+
+    .hero-image {
+      position: relative;
+      height: 500px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { filter: brightness(1) contrast(1.05); }
+      50% { filter: brightness(1.05) contrast(1.1); }
+    }
+
+    .hero-info {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.03);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gold);
+      font-family: 'Courier New', monospace;
+    }
+
+    .connection-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      animation: none;
+    }
+
+    .status-dot.live {
+      background: var(--success);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .feed-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold);
+    }
+
+    .feed {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-height: 600px;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .feed-row {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+
+    .feed-row:last-child {
+      border-bottom: none;
+    }
+
+    .feed-row:hover {
+      background: rgba(212, 175, 55, 0.02);
+    }
+
+    .feed-icon {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      overflow: hidden;
+    }
+
+    .feed-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .feed-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .feed-wallet {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
+      margin-bottom: 4px;
+    }
+
+    .feed-amount {
+      color: var(--gold);
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+
+    .feed-status {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-left: auto;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .feed-status.success {
+      color: var(--success);
+    }
+
+    .feed-status.failed {
+      color: #ef5350;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--surface);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--gold);
+    }
+
+    .mint-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .mint-tab {
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .mint-tab:hover, .mint-tab.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .countdown {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold);
+      font-family: 'Courier New', monospace;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-section { grid-template-columns: 1fr; }
+      .hero-image { height: 350px; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .logo { font-size: 24px; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .hero-image { height: 300px; }
+      .stat-value { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">⚡ BULL BANK ⚡</div>
+      <div class="ticker">$BULLBANK · Solana</div>
+    </header>
+
+    <div class="hero-section">
+      <div class="hero-image">
+        <img src="/public/bull-bank-hero.png" alt="Bull Bank">
+      </div>
+      
+      <div class="hero-info">
+        <div class="connection-indicator">
+          <div class="status-dot live" id="statusDot"></div>
+          <span id="statusText">Connecting...</span>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">Next Distribution</div>
+            <div class="countdown" id="countdown">--:--:--</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Eligible Holders</div>
+            <div class="stat-value" id="holderCount">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Creator Balance</div>
+            <div class="stat-value" id="creatorBalance">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Distributed</div>
+            <div class="stat-value" id="totalDistributed">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Current Token</div>
+            <div class="stat-value" id="currentToken">--</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Distribution Status</div>
+            <div class="stat-value" id="cycleStatus" style="font-size: 14px;">Idle</div>
+          </div>
+        </div>
+
+        <div class="mint-tabs" id="mintTabs"></div>
+      </div>
+    </div>
+
+    <div class="feed-title">Live Feed</div>
+    <div class="feed" id="feed"></div>
+  </div>
+
+  <script>
+    const SOCKET_URL = 'wss://marcelo-admin.up.railway.app';
+    const CONTRACT_ADDRESS = new URLSearchParams(window.location.search).get('ca');
+
+    let socket;
+    let metadataByMint = new Map();
+    let activeTokenMint = null;
+    let activeTokenSymbol = null;
+    let liveDistributedByMint = new Map();
+    let socketRetryMs = 1000;
+
+    function connectSocket() {
+      console.log('Connecting to', SOCKET_URL);
+      setStatus('connecting', 'Connecting...');
+      
+      socket = new WebSocket(SOCKET_URL);
+      socket.addEventListener('open', () => {
+        console.log('Socket connected');
+        socketRetryMs = 1000;
+        setStatus('live', 'Live');
+      });
+
+      socket.addEventListener('message', (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          if (message && typeof message.type === 'string') {
+            handleSocketMessage(message);
+          }
+        } catch (err) {
+          console.warn('Invalid message', err);
+        }
+      });
+
+      socket.addEventListener('error', () => {
+        console.error('Socket error');
+        socket.close();
+      });
+
+      socket.addEventListener('close', () => {
+        console.log('Socket closed, retrying in', socketRetryMs);
+        setStatus('reconnecting', 'Reconnecting...');
+        setTimeout(connectSocket, socketRetryMs);
+        socketRetryMs = Math.min(socketRetryMs * 2, 15000);
+      });
+    }
+
+    function setStatus(state, text) {
+      const dot = document.getElementById('statusDot');
+      const label = document.getElementById('statusText');
+      dot.classList.remove('live');
+      if (state === 'live') dot.classList.add('live');
+      label.textContent = text;
+    }
+
+    function resolveActiveToken(state) {
+      if (CONTRACT_ADDRESS) return CONTRACT_ADDRESS;
+      
+      if (state?.currentCycle?.tokenChosen?.mint) {
+        return state.currentCycle.tokenChosen.mint;
+      }
+      
+      if (state?.config?.tokenMint) {
+        return state.config.tokenMint;
+      }
+      
+      return null;
+    }
+
+    function getDistributedForMint(mint, state) {
+      if (!mint || !state?.history) return 0;
+      
+      let total = 0;
+      for (const record of state.history) {
+        if (record.tokenMint === mint) {
+          if (Array.isArray(record.transfers)) {
+            for (const t of record.transfers) {
+              total += t.amount || 0;
+            }
+          } else {
+            total += record.tokensBought || 0;
+          }
+        }
+      }
+      return total;
+    }
+
+    function formatTokenAmount(amount) {
+      if (amount === undefined || amount === null) return '0';
+      if (amount === 0) return '0';
+      
+      const fmt = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 9,
+        useGrouping: true
+      });
+      return fmt.format(amount);
+    }
+
+    function formatCompact(num) {
+      if (!num || num === 0) return '0';
+      if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+      if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+      if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+      return num.toFixed(0);
+    }
+
+    function formatCompactWithDecimals(num) {
+      if (!num || num === 0) return '0';
+      
+      const decimals = 6;
+      if (num >= 1e9) return (num / 1e9).toFixed(Math.min(decimals, 2)) + 'B';
+      if (num >= 1e6) return (num / 1e6).toFixed(Math.min(decimals, 2)) + 'M';
+      if (num >= 1e3) return (num / 1e3).toFixed(Math.min(decimals, 2)) + 'K';
+      
+      const fmt = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: decimals,
+        useGrouping: true
+      });
+      return fmt.format(num);
+    }
+
+    function updateMintLabels(state) {
+      const mint = activeTokenMint || resolveActiveToken(state);
+      if (!mint) return;
+
+      activeTokenMint = mint;
+      
+      const metadata = metadataByMint.get(mint);
+      activeTokenSymbol = metadata?.symbol || null;
+      
+      document.getElementById('currentToken').textContent = activeTokenSymbol || '?';
+    }
+
+    function updateStatsFromState(state) {
+      if (!state) return;
+
+      updateMintLabels(state);
+
+      const holderCount = state.currentCycle?.holdersCount ?? state.holders?.length ?? 0;
+      document.getElementById('holderCount').textContent = formatCompact(holderCount);
+
+      const creatorBal = state.creatorBalance ?? 0;
+      document.getElementById('creatorBalance').textContent = formatCompactWithDecimals(creatorBal / 1e9);
+
+      const distributed = (activeTokenMint ? getDistributedForMint(activeTokenMint, state) : 0) + 
+                          (liveDistributedByMint.get(activeTokenMint) || 0);
+      document.getElementById('totalDistributed').textContent = formatTokenAmount(distributed);
+
+      const phase = state.currentCycle?.phase || 'idle';
+      const phaseLabel = {
+        'idle': 'Idle',
+        'claiming_fees': 'Claiming Fees',
+        'fetching_holders': 'Fetching Holders',
+        'swapping': 'Swapping',
+        'distributing': 'Distributing',
+        'completed': 'Completed',
+        'failed': 'Failed'
+      }[phase] || phase;
+      document.getElementById('cycleStatus').textContent = phaseLabel;
+
+      renderMintTabs(state);
+      updateCountdown(state);
+    }
+
+    function updateCountdown(state) {
+      if (!state?.nextDistributionTime) {
+        document.getElementById('countdown').textContent = '--:--:--';
+        return;
+      }
+
+      const next = new Date(state.nextDistributionTime).getTime();
+      const now = Date.now();
+      const remaining = Math.max(0, Math.round((next - now) / 1000));
+
+      const h = Math.floor(remaining / 3600);
+      const m = Math.floor((remaining % 3600) / 60);
+      const s = remaining % 60;
+
+      document.getElementById('countdown').textContent = 
+        `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function renderMintTabs(state) {
+      const mints = state?.config?.distributionTokens || [];
+      const container = document.getElementById('mintTabs');
+      
+      if (mints.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = mints.map(mint => {
+        const symbol = metadataByMint.get(mint)?.symbol || mint.slice(0, 6);
+        const isActive = activeTokenMint === mint;
+        return `<div class="mint-tab ${isActive ? 'active' : ''}" 
+                  onclick="switchMint('${mint}')">${symbol}</div>`;
+      }).join('');
+    }
+
+    function switchMint(mint) {
+      activeTokenMint = mint;
+      const metadata = metadataByMint.get(mint);
+      activeTokenSymbol = metadata?.symbol || null;
+
+      document.querySelectorAll('.mint-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('currentToken').textContent = activeTokenSymbol || '?';
+      
+      const distributed = (getDistributedForMint(mint, window.lastState) || 0) + 
+                          (liveDistributedByMint.get(mint) || 0);
+      document.getElementById('totalDistributed').textContent = formatTokenAmount(distributed);
+    }
+
+    function renderRow(record, type) {
+      const metadata = metadataByMint.get(record.tokenMint || record.mint);
+      const symbol = metadata?.symbol || '?';
+      const image = metadata?.image && /^https?:\/\//i.test(metadata.image) 
+        ? metadata.image 
+        : null;
+
+      let wallet = record.wallet || '—';
+      let amount = record.amount ?? record.tokenReceived ?? record.tokensBought ?? 0;
+      let status = record.status || 'pending';
+
+      let walletDisplay = wallet === '—' ? 'TREASURY' : wallet;
+      if (walletDisplay !== 'TREASURY' && walletDisplay !== 'ADMIN') {
+        walletDisplay = wallet.slice(0, 6) + '...' + wallet.slice(-6);
+      }
+
+      const icon = image 
+        ? `<img src="${image}" alt="${symbol}">`
+        : `<span>${symbol.slice(0, 1)}</span>`;
+
+      const timestamp = new Date().toLocaleTimeString();
+      
+      return `
+        <div class="feed-row">
+          <div class="feed-icon">${icon}</div>
+          <div class="feed-content">
+            <div class="feed-wallet">${walletDisplay}</div>
+            <div class="feed-amount">${formatTokenAmount(amount)} ${symbol}</div>
+          </div>
+          <div class="feed-status ${status === 'success' ? 'success' : status === 'failed' ? 'failed' : ''}">
+            ${status.toUpperCase()}
+          </div>
+        </div>
+      `;
+    }
+
+    function prependToFeed(html) {
+      const feed = document.getElementById('feed');
+      feed.insertAdjacentHTML('afterbegin', html);
+      
+      while (feed.children.length > 50) {
+        feed.removeChild(feed.lastChild);
+      }
+    }
+
+    function handleSocketMessage(message) {
+      const { type, data } = message;
+      console.log('Event:', type);
+
+      switch (type) {
+        case 'state':
+          window.lastState = data;
+          liveDistributedByMint.clear();
+          
+          if (CONTRACT_ADDRESS && data.config?.tokenMint) {
+            activeTokenMint = CONTRACT_ADDRESS;
+          } else {
+            activeTokenMint = resolveActiveToken(data);
+          }
+
+          updateStatsFromState(data);
+          
+          if (Array.isArray(data.history)) {
+            document.getElementById('feed').innerHTML = '';
+            const reversed = [...data.history].reverse();
+            for (const record of reversed) {
+              if (Array.isArray(record.transfers)) {
+                for (const transfer of record.transfers) {
+                  const row = renderRow({
+                    ...transfer,
+                    tokenMint: record.tokenMint,
+                    tokenSymbol: record.tokenSymbol
+                  }, 'transfer');
+                  prependToFeed(row);
+                }
+              }
+            }
+          }
+
+          if (data.config?.distributionTokenMetadata) {
+            for (const m of data.config.distributionTokenMetadata) {
+              if (m?.mint) metadataByMint.set(m.mint, m);
+            }
+          }
+
+          if (data.currentCycle?.active) {
+            document.getElementById('cycleStatus').textContent = 'Distributing';
+          }
+          break;
+
+        case 'token_metadata':
+          if (Array.isArray(data)) {
+            for (const m of data) {
+              if (m?.mint) metadataByMint.set(m.mint, m);
+            }
+          }
+          renderMintTabs(window.lastState);
+          break;
+
+        case 'tick':
+        case 'scheduler_state':
+          if (data?.nextDistributionTime) {
+            window.lastState = window.lastState || {};
+            window.lastState.nextDistributionTime = data.nextDistributionTime;
+            window.lastState.secondsRemaining = data.secondsRemaining;
+            updateCountdown(window.lastState);
+          }
+          break;
+
+        case 'cycle_start':
+          document.getElementById('cycleStatus').textContent = 'Distributing';
+          break;
+
+        case 'cycle_update':
+          if (data?.tokenChosen?.mint) {
+            metadataByMint.set(data.tokenChosen.mint, data.tokenChosen);
+            activeTokenSymbol = data.tokenChosen.symbol;
+          }
+          document.getElementById('cycleStatus').textContent = (data?.phase || 'idle').toUpperCase();
+          break;
+
+        case 'cycle_end':
+          window.lastState = window.lastState || {};
+          window.lastState.history = data.history || [];
+          liveDistributedByMint.delete(activeTokenMint);
+          updateStatsFromState(window.lastState);
+          document.getElementById('cycleStatus').textContent = 'Completed';
+          setTimeout(() => {
+            document.getElementById('cycleStatus').textContent = 'Idle';
+          }, 3000);
+          break;
+
+        case 'holders_update':
+          window.lastState = window.lastState || {};
+          window.lastState.holders = data || [];
+          document.getElementById('holderCount').textContent = formatCompact(data?.length || 0);
+          break;
+
+        case 'transfer':
+          if (!data.wallet || !data.tokenMint) break;
+          
+          const mint = data.tokenMint;
+          if (activeTokenMint === mint) {
+            liveDistributedByMint.set(mint, (liveDistributedByMint.get(mint) || 0) + (data.amount || 0));
+          }
+
+          const row = renderRow(data, 'transfer');
+          prependToFeed(row);
+          updateStatsFromState(window.lastState);
+          break;
+
+        case 'fee_claim':
+        case 'token_swap':
+          if (data?.tokenMetadata?.mint) {
+            metadataByMint.set(data.tokenMetadata.mint, data.tokenMetadata);
+          }
+          const swapRow = renderRow(data, type);
+          prependToFeed(swapRow);
+          break;
+      }
+    }
+
+    setInterval(() => updateCountdown(window.lastState), 1000);
+    connectSocket();
+  </script>
+</body>
+</html>
