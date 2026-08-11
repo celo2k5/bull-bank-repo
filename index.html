@@ -92,41 +92,6 @@
       gap: 20px;
     }
 
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 20px;
-      border-radius: 6px;
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      border-color: var(--gold);
-      background: rgba(212, 175, 55, 0.03);
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-
-    .stat-value {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--gold);
-      font-family: 'Courier New', monospace;
-    }
-
     .connection-indicator {
       display: inline-flex;
       align-items: center;
@@ -136,7 +101,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 4px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     .status-dot {
@@ -155,6 +120,78 @@
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
+    }
+
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 20px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stat-card:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.03);
+    }
+
+    .stat-icon {
+      font-size: 20px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gold);
+      font-family: 'Courier New', monospace;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-sublabel {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .mint-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .mint-tab {
+      padding: 8px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .mint-tab:hover, .mint-tab.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.1);
     }
 
     .feed-title {
@@ -264,49 +301,14 @@
       background: var(--gold);
     }
 
-    .mint-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .mint-tab {
-      padding: 8px 14px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.2s;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-muted);
-    }
-
-    .mint-tab:hover, .mint-tab.active {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.1);
-    }
-
-    .countdown {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--gold);
-      font-family: 'Courier New', monospace;
-      margin-top: 10px;
-    }
-
     @media (max-width: 900px) {
       .hero-section { grid-template-columns: 1fr; }
       .hero-image { height: 350px; }
-      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-section { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 600px) {
       .logo { font-size: 24px; }
-      .stat-grid { grid-template-columns: 1fr; }
       .hero-image { height: 300px; }
       .stat-value { font-size: 18px; }
     }
@@ -330,34 +332,44 @@
           <span id="statusText">Connecting...</span>
         </div>
 
-        <div class="stat-grid">
+        <div class="mint-tabs" id="mintTabs"></div>
+
+        <div class="stats-section">
           <div class="stat-card">
-            <div class="stat-label">Next Distribution</div>
-            <div class="countdown" id="countdown">--:--:--</div>
+            <div class="stat-icon">💰</div>
+            <div class="stat-label">Total Supply</div>
+            <div class="stat-value" id="totalSupply">0</div>
+            <div class="stat-sublabel" id="totalSupplySymbol">--</div>
           </div>
+
           <div class="stat-card">
-            <div class="stat-label">Eligible Holders</div>
-            <div class="stat-value" id="holderCount">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Creator Balance</div>
-            <div class="stat-value" id="creatorBalance">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Total Distributed</div>
+            <div class="stat-icon">📊</div>
+            <div class="stat-label">Distributed</div>
             <div class="stat-value" id="totalDistributed">0</div>
+            <div class="stat-sublabel" id="distributedSymbol">--</div>
           </div>
+
           <div class="stat-card">
-            <div class="stat-label">Current Token</div>
-            <div class="stat-value" id="currentToken">--</div>
+            <div class="stat-icon">👥</div>
+            <div class="stat-label">Holders</div>
+            <div class="stat-value" id="holderCount">0</div>
+            <div class="stat-sublabel">wallets</div>
           </div>
+
           <div class="stat-card">
-            <div class="stat-label">Distribution Status</div>
-            <div class="stat-value" id="cycleStatus" style="font-size: 14px;">Idle</div>
+            <div class="stat-icon">📈</div>
+            <div class="stat-label">Distributed</div>
+            <div class="stat-value" id="distributionPercent">0.00%</div>
+            <div class="stat-sublabel">of supply</div>
+          </div>
+
+          <div class="stat-card" style="grid-column: 1 / -1;">
+            <div class="stat-icon">⏱️</div>
+            <div class="stat-label">Next Distribution</div>
+            <div class="stat-value" id="countdown" style="font-size: 28px;">--:--:--</div>
+            <div class="stat-sublabel">countdown</div>
           </div>
         </div>
-
-        <div class="mint-tabs" id="mintTabs"></div>
       </div>
     </div>
 
@@ -471,60 +483,35 @@
       return num.toFixed(0);
     }
 
-    function formatCompactWithDecimals(num) {
-      if (!num || num === 0) return '0';
-      
-      const decimals = 6;
-      if (num >= 1e9) return (num / 1e9).toFixed(Math.min(decimals, 2)) + 'B';
-      if (num >= 1e6) return (num / 1e6).toFixed(Math.min(decimals, 2)) + 'M';
-      if (num >= 1e3) return (num / 1e3).toFixed(Math.min(decimals, 2)) + 'K';
-      
-      const fmt = new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: decimals,
-        useGrouping: true
-      });
-      return fmt.format(num);
-    }
-
-    function updateMintLabels(state) {
-      const mint = activeTokenMint || resolveActiveToken(state);
-      if (!mint) return;
-
-      activeTokenMint = mint;
-      
-      const metadata = metadataByMint.get(mint);
-      activeTokenSymbol = metadata?.symbol || null;
-      
-      document.getElementById('currentToken').textContent = activeTokenSymbol || '?';
-    }
-
     function updateStatsFromState(state) {
       if (!state) return;
 
-      updateMintLabels(state);
+      // Determine active mint
+      const mint = CONTRACT_ADDRESS || resolveActiveToken(state);
+      if (mint) {
+        activeTokenMint = mint;
+        const metadata = metadataByMint.get(mint);
+        activeTokenSymbol = metadata?.symbol || '?';
+      }
 
-      const holderCount = state.currentCycle?.holdersCount ?? state.holders?.length ?? 0;
-      document.getElementById('holderCount').textContent = formatCompact(holderCount);
+      // Get supply from config or assume 1B default
+      const supply = 1e9; // Default to 1B
+      
+      // Get distributed amount
+      const historyDistributed = getDistributedForMint(activeTokenMint, state);
+      const liveDistributed = liveDistributedByMint.get(activeTokenMint) || 0;
+      const totalDistributed = historyDistributed + liveDistributed;
 
-      const creatorBal = state.creatorBalance ?? 0;
-      document.getElementById('creatorBalance').textContent = formatCompactWithDecimals(creatorBal / 1e9);
+      // Calculate percentage
+      const percentage = supply > 0 ? (totalDistributed / supply) * 100 : 0;
 
-      const distributed = (activeTokenMint ? getDistributedForMint(activeTokenMint, state) : 0) + 
-                          (liveDistributedByMint.get(activeTokenMint) || 0);
-      document.getElementById('totalDistributed').textContent = formatTokenAmount(distributed);
-
-      const phase = state.currentCycle?.phase || 'idle';
-      const phaseLabel = {
-        'idle': 'Idle',
-        'claiming_fees': 'Claiming Fees',
-        'fetching_holders': 'Fetching Holders',
-        'swapping': 'Swapping',
-        'distributing': 'Distributing',
-        'completed': 'Completed',
-        'failed': 'Failed'
-      }[phase] || phase;
-      document.getElementById('cycleStatus').textContent = phaseLabel;
+      // Update DOM
+      document.getElementById('totalSupply').textContent = formatCompact(supply);
+      document.getElementById('totalSupplySymbol').textContent = activeTokenSymbol || '--';
+      document.getElementById('totalDistributed').textContent = formatTokenAmount(totalDistributed);
+      document.getElementById('distributedSymbol').textContent = activeTokenSymbol || '--';
+      document.getElementById('holderCount').textContent = formatCompact(state.currentCycle?.holdersCount ?? state.holders?.length ?? 0);
+      document.getElementById('distributionPercent').textContent = percentage.toFixed(2) + '%';
 
       renderMintTabs(state);
       updateCountdown(state);
@@ -573,11 +560,7 @@
       document.querySelectorAll('.mint-tab').forEach(tab => tab.classList.remove('active'));
       event.target.classList.add('active');
 
-      document.getElementById('currentToken').textContent = activeTokenSymbol || '?';
-      
-      const distributed = (getDistributedForMint(mint, window.lastState) || 0) + 
-                          (liveDistributedByMint.get(mint) || 0);
-      document.getElementById('totalDistributed').textContent = formatTokenAmount(distributed);
+      updateStatsFromState(window.lastState);
     }
 
     function renderRow(record, type) {
@@ -600,8 +583,6 @@
         ? `<img src="${image}" alt="${symbol}">`
         : `<span>${symbol.slice(0, 1)}</span>`;
 
-      const timestamp = new Date().toLocaleTimeString();
-      
       return `
         <div class="feed-row">
           <div class="feed-icon">${icon}</div>
@@ -634,12 +615,6 @@
           window.lastState = data;
           liveDistributedByMint.clear();
           
-          if (CONTRACT_ADDRESS && data.config?.tokenMint) {
-            activeTokenMint = CONTRACT_ADDRESS;
-          } else {
-            activeTokenMint = resolveActiveToken(data);
-          }
-
           updateStatsFromState(data);
           
           if (Array.isArray(data.history)) {
@@ -664,10 +639,6 @@
               if (m?.mint) metadataByMint.set(m.mint, m);
             }
           }
-
-          if (data.currentCycle?.active) {
-            document.getElementById('cycleStatus').textContent = 'Distributing';
-          }
           break;
 
         case 'token_metadata':
@@ -690,15 +661,12 @@
           break;
 
         case 'cycle_start':
-          document.getElementById('cycleStatus').textContent = 'Distributing';
           break;
 
         case 'cycle_update':
           if (data?.tokenChosen?.mint) {
             metadataByMint.set(data.tokenChosen.mint, data.tokenChosen);
-            activeTokenSymbol = data.tokenChosen.symbol;
           }
-          document.getElementById('cycleStatus').textContent = (data?.phase || 'idle').toUpperCase();
           break;
 
         case 'cycle_end':
@@ -706,10 +674,6 @@
           window.lastState.history = data.history || [];
           liveDistributedByMint.delete(activeTokenMint);
           updateStatsFromState(window.lastState);
-          document.getElementById('cycleStatus').textContent = 'Completed';
-          setTimeout(() => {
-            document.getElementById('cycleStatus').textContent = 'Idle';
-          }, 3000);
           break;
 
         case 'holders_update':
